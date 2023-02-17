@@ -1,49 +1,34 @@
-﻿string variable = "21 + 32 - 567";
-List<string> operations = new List<string>();
-char[] operators = new[] { '+', '-', '*', '/' };
+﻿string input = "22 + 3*(56-     45)^435345";
 
-string buff = "";
-char? oper = null;
-foreach (var s in variable)
+string b = "";
+string[] result = new String[50];
+int index = 0;
+
+foreach (var x in input)
 {
-    if (s == ' ')
+    if (Char.IsDigit(x))
     {
-        continue;
+        b += x;
     }
-    
-    if (Char.IsDigit(s))
-    {
-        buff += s;
-    }
-    else if (operators.Contains(s))
-    {
-        if (oper is null)
+    else
+    { 
+        if (! (x == ' '))
         {
-            operations.Add(buff);
-            buff = "";
-            oper = s;
+            if (b.Length > 0)
+            {
+                result[index] = b;
+                b = "";
+                index += 1;
+            }
+            result[index] = x.ToString();
+            index += 1;
         }
-        else
-        {
-            operations.Add(buff);
-            operations.Add(oper.ToString());
-            buff = "";
-            oper = null;
-        }
+        
     }
 }
 
-if (buff != "")
+if (b.Length > 0)
 {
-    operations.Add(buff);
+    result[index] = b;
 }
-
-if (oper is not null)
-{
-    operations.Add(oper.ToString());
-}
-
-foreach (var op in operations)
-{
-    Console.WriteLine(op);
-}
+Console.WriteLine("result: b=" + b);
