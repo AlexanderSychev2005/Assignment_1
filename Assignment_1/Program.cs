@@ -32,5 +32,38 @@ namespace Kse.Algorithms.Samples
             return value;
         }
     }
+    public class Calculator
+    {
+        public static void Main()
+        {
+            var input = Console.ReadLine();
+
+            // Tokenize the input
+            var b = "";
+            var result = new List<string>();
+            foreach (var x in input)
+            {
+                if (Char.IsDigit(x))
+                {
+                    b += x;
+                }
+                else
+                { 
+                    if (! (x == ' '))
+                    {
+                        if (b.Length > 0)
+                        {
+                            result.Add(b);
+                            b = "";
+                        }
+                        result.Add(x.ToString());
+                    }
+                }
+            }
+
+            if (b.Length > 0)
+            {
+                result.Add(b);
+            }
     
     
