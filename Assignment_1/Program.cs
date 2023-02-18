@@ -32,6 +32,7 @@ namespace Kse.Algorithms.Samples
             return value;
         }
     }
+
     public class Calculator
     {
         public static void Main()
@@ -65,6 +66,7 @@ namespace Kse.Algorithms.Samples
             {
                 result.Add(b);
             }
+
             // Convert from infix to postfix notation
             var output = new List<string>();
             var stack = new Stack();
@@ -74,17 +76,17 @@ namespace Kse.Algorithms.Samples
                 {
                     output.Add(token);
                 }
-                else if (token == "+"  token == "-")
+                else if (token == "+" || token == "-")
                 {
-                    while (stack.Pull() is string top && (top == "+"  top == "-"  top == "*"  top == "/"))
+                    while (stack.Pull() is string top && (top == "+" || top == "-" || top == "*" || top == "/"))
                     {
                         output.Add(top);
                     }
                     stack.Push(token);
                 }
-                else if (token == "*"  token == "/")
+                else if (token == "*" || token == "/")
                 {
-                    while (stack.Pull() is string top && (top == "*"  top == "/"))
+                    while (stack.Pull() is string top && (top == "*" || top == "/"))
                     {
                         output.Add(top);
                     }
@@ -115,6 +117,7 @@ namespace Kse.Algorithms.Samples
                 }
                 output.Add(top);
             }
+
             // Evaluate the expression
             stack = new Stack();
             foreach (var token in output)
@@ -145,5 +148,3 @@ namespace Kse.Algorithms.Samples
                 {
                     var a = int.Parse(stack.Pull());
                     var b =
-    
-    
