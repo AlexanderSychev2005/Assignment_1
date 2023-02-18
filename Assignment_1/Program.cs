@@ -65,5 +65,55 @@ namespace Kse.Algorithms.Samples
             {
                 result.Add(b);
             }
+            // Convert from infix to postfix notation
+            var output = new List<string>();
+            var stack = new Stack();
+            foreach (var token in result)
+            {
+                if (int.TryParse(token, out _))
+                {
+                    output.Add(token);
+                }
+                else if (token == "+"  token == "-")
+                {
+                    while (stack.Pull() is string top && (top == "+"  top == "-"  top == "*"  top == "/"))
+                    {
+                        output.Add(top);
+                    }
+                    stack.Push(token);
+                }
+                else if (token == "*"  token == "/")
+                {
+                    while (stack.Pull() is string top && (top == "*"  top == "/"))
+                    {
+                        output.Add(top);
+                    }
+                    stack.Push(token);
+                }
+                else if (token == "(")
+                {
+                    stack.Push(token);
+                }
+                else if (token == ")")
+                {
+                    while (stack.Pull() is string top && top != "(")
+                    {
+                        output.Add(top);
+                    }
+                }
+                else
+                {
+                    throw new Exception("Invalid token: " + token);
+                }
+            }
+
+            while (stack.Pull() is string top)
+            {
+                if (top == "(")
+                {
+                    throw new Exception("Mismatched parentheses");
+                }
+                output.Add(top);
+            }
     
     
