@@ -1,49 +1,79 @@
-﻿string variable = "21 + 32 - 567";
-List<string> operations = new List<string>();
-char[] operators = new[] { '+', '-', '*', '/' };
+﻿using System.Xml;
 
-string buff = "";
-char? oper = null;
-foreach (var s in variable)
+string input = Console.ReadLine();
+
+string b = "";
+string[] result = new String[50];
+int index = 0;
+
+foreach (var x in input)
 {
-    if (s == ' ')
+    if (Char.IsDigit(x))
     {
-        continue;
+        b += x;
     }
-    
-    if (Char.IsDigit(s))
-    {
-        buff += s;
-    }
-    else if (operators.Contains(s))
-    {
-        if (oper is null)
+    else
+    { 
+        if (! (x == ' '))
         {
-            operations.Add(buff);
-            buff = "";
-            oper = s;
+            if (b.Length > 0)
+            {
+                result[index] = b;
+                b = "";
+                index += 1;
+            }
+            result[index] = x.ToString();
+            index += 1;
         }
-        else
-        {
-            operations.Add(buff);
-            operations.Add(oper.ToString());
-            buff = "";
-            oper = null;
-        }
+        
     }
 }
 
-if (buff != "")
+if (b.Length > 0)
 {
-    operations.Add(buff);
+    result[index] = b;
 }
 
-if (oper is not null)
-{
-    operations.Add(oper.ToString());
-}
 
-foreach (var op in operations)
+namespace Kse.Algorithms.Samples
 {
-    Console.WriteLine(op);
+    using System;
+
+    /// <summary>
+    /// This is a simple implementation of a limited capacity stack.
+    /// You can improve it by adding resizing or mote additional methods
+    /// </summary>
+    public class Stack
+    {
+        private const int Capacity = 50;
+
+        private string[] _array = new string[Capacity];
+
+        private int _pointer;
+
+        public void Push(string value)
+        {
+            if (_pointer == _array.Length)
+            {
+                // this code is raising an exception about reaching stack limit
+                throw new Exception("Stack overflowed");
+            }
+
+            _array[_pointer] = value;
+            _pointer++;
+        }
+
+        public string Pull()
+        {
+            if (_pointer == 0)
+            {
+                //you can also raise an exception here, but we're simple returning nothing
+                return null;
+            }
+
+            var value = _array[_pointer];
+            _pointer--;
+            return value;
+        }
+    }
 }
