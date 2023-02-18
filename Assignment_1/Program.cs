@@ -115,5 +115,35 @@ namespace Kse.Algorithms.Samples
                 }
                 output.Add(top);
             }
+            // Evaluate the expression
+            stack = new Stack();
+            foreach (var token in output)
+            {
+                if (int.TryParse(token, out int number))
+                {
+                    stack.Push(number.ToString());
+                }
+                else if (token == "+")
+                {
+                    var a = int.Parse(stack.Pull());
+                    var b = int.Parse(stack.Pull());
+                    stack.Push((a + b).ToString());
+                }
+                else if (token == "-")
+                {
+                    var a = int.Parse(stack.Pull());
+                    var b = int.Parse(stack.Pull());
+                    stack.Push((b - a).ToString());
+                }
+                else if (token == "*")
+                {
+                    var a = int.Parse(stack.Pull());
+                    var b = int.Parse(stack.Pull());
+                    stack.Push((a * b).ToString());
+                }
+                else if (token == "/")
+                {
+                    var a = int.Parse(stack.Pull());
+                    var b =
     
     
