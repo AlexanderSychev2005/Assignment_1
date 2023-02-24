@@ -42,8 +42,9 @@ namespace Kse.Algorithms.Samples
             // Tokenize the input
             var d = "";
             var result = new List<string>();
-            foreach (var x in input)
+            for (int i = 0; i < input.Length; i++)
             {
+                var x = input[i];
                 if (Char.IsDigit(x))
                 {
                     d += x;
@@ -58,7 +59,15 @@ namespace Kse.Algorithms.Samples
                             d = "";
                         }
 
-                        result.Add(x.ToString());
+                        if (x == 't' && input.Length > i + 2 && input[i + 1] == 'a' && input[i + 2] == 'n')
+                        {
+                            result.Add("tan");
+                            i += 2;
+                        }
+                        else
+                        {
+                            result.Add(x.ToString());
+                        }
                     }
                 }
             }
@@ -68,96 +77,119 @@ namespace Kse.Algorithms.Samples
                 result.Add(d);
             }
 
-            // Convert from infix to postfix notation
-            var output = new List<string>();
-            var stack = new Stack();
-            foreach (var token in result)
-            {
-                if (int.TryParse(token, out _))
+                if (d.Length > 0)
                 {
-                    output.Add(token);
+                    result.Add(d);
                 }
-                else if (token == "+" || token == "-")
+
+                // Convert from infix to postfix notation
+                var output = new List<string>();
+                var stack = new Stack();
+                foreach (var token in result)
                 {
-                    while (stack.Pull() is string top && (top == "+" || top == "-" || top == "*" || top == "/"))
+                    if (int.TryParse(token, out _))
                     {
-                        output.Add(top);
+                        output.Add(token);
+                    }
+                    else if (token == "tan") // добавляем оператор "tan"
+                    {
+                        while (stack.Pull() is string top && (top == "+" || top == "-" || top == "*" || top == "/"))
+                        {
+                            output.Add(top);
+                        }
+
+                        stack.Push(token);
+                    }
+                    else if (token == "+" || token == "-")
+                    {
+                        while (stack.Pull() is string top && (top == "+" || top == "-" || top == "*" || top == "/"))
+                        {
+                            output.Add(top);
+                        }
+
+                        stack.Push(token);
+                    }
+                    else if (token == "*" || token == "/")
+                    {
+                        while (stack.Pull() is string top && (top == "*" || top == "/"))
+                        {
+                            output.Add(top);
+                        }
+
+                        stack.Push(token);
+                    }
+                    else if (token == "(")
+                    {
+                        stack.Push(token);
+                    }
+                    else if (token == ")")
+                    {
+                        while (stack.Pull() is string top && top != "(")
+                        {
+                            output.Add(top);
+                        }
                     }
 
-                    stack.Push(token);
-                }
-                else if (token == "*" || token == "/")
-                {
-                    while (stack.Pull() is string top && (top == "*" || top == "/"))
+                    else
                     {
-                        output.Add(top);
-                    }
-
-                    stack.Push(token);
-                }
-                else if (token == "(")
-                {
-                    stack.Push(token);
-                }
-                else if (token == ")")
-                {
-                    while (stack.Pull() is string top && top != "(")
-                    {
-                        output.Add(top);
+                        throw new Exception("Invalid token: " + token);
                     }
                 }
-                else
+
+                while (stack.Pull() is string top)
                 {
-                    throw new Exception("Invalid token: " + token);
+                    if (top == "(")
+                    {
+                        throw new Exception("Mismatched parentheses");
+                    }
+
+                    output.Add(top);
                 }
+
+                // Evaluate the expression
+                stack = new Stack();
+                foreach (var token in output)
+                {
+                    if (int.TryParse(token, out int number))
+                    {
+                        stack.Push(number.ToString());
+                    }
+                    else if (token == "+")
+                    {
+                        var a = int.Parse(stack.Pull());
+                        var b = int.Parse(stack.Pull());
+                        stack.Push((a + b).ToString());
+                    }
+                    else if (token == "-")
+                    {
+                        var a = int.Parse(stack.Pull());
+                        var b = int.Parse(stack.Pull());
+                        stack.Push((b - a).ToString());
+                    }
+                    else if (token == "*")
+                    {
+                        var a = int.Parse(stack.Pull());
+                        var b = int.Parse(stack.Pull());
+                        stack.Push((a * b).ToString());
+                    }
+                    else if (token == "/")
+                    {
+                        var a = int.Parse(stack.Pull());
+                        var b = int.Parse(stack.Pull());
+                        stack.Push((a / b).ToString());
+                    }
+                    else if (token == "tan")
+                    {
+                        var a = double.Parse(stack.Pull());
+                        var angleInRadians = a * Math.PI / 180;
+                        var tan = Math.Tan(angleInRadians);
+                        stack.Push(tan.ToString());
+                    }
+                }
+
+                Console.WriteLine(stack.Pull());
+
             }
-
-            while (stack.Pull() is string top)
-            {
-                if (top == "(")
-                {
-                    throw new Exception("Mismatched parentheses");
-                }
-
-                output.Add(top);
-            }
-
-            // Evaluate the expression
-            stack = new Stack();
-            foreach (var token in output)
-            {
-                if (int.TryParse(token, out int number))
-                {
-                    stack.Push(number.ToString());
-                }
-                else if (token == "+")
-                {
-                    var a = int.Parse(stack.Pull());
-                    var b = int.Parse(stack.Pull());
-                    stack.Push((a + b).ToString());
-                }
-                else if (token == "-")
-                {
-                    var a = int.Parse(stack.Pull());
-                    var b = int.Parse(stack.Pull());
-                    stack.Push((b - a).ToString());
-                }
-                else if (token == "*")
-                {
-                    var a = int.Parse(stack.Pull());
-                    var b = int.Parse(stack.Pull());
-                    stack.Push((a * b).ToString());
-                }
-                else if (token == "/")
-                {
-                    var a = int.Parse(stack.Pull());
-                    var b = int.Parse(stack.Pull());
-                    stack.Push((a / b).ToString());
-                }
-            }
-            Console.WriteLine(stack.Pull());
-
         }
     }
-}
 
