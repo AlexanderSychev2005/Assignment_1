@@ -40,31 +40,32 @@ namespace Kse.Algorithms.Samples
             var input = Console.ReadLine();
 
             // Tokenize the input
-            var b = "";
+            var d = "";
             var result = new List<string>();
             foreach (var x in input)
             {
                 if (Char.IsDigit(x))
                 {
-                    b += x;
+                    d += x;
                 }
                 else
-                { 
-                    if (! (x == ' '))
+                {
+                    if (!(x == ' '))
                     {
-                        if (b.Length > 0)
+                        if (d.Length > 0)
                         {
-                            result.Add(b);
-                            b = "";
+                            result.Add(d);
+                            d = "";
                         }
+
                         result.Add(x.ToString());
                     }
                 }
             }
 
-            if (b.Length > 0)
+            if (d.Length > 0)
             {
-                result.Add(b);
+                result.Add(d);
             }
 
             // Convert from infix to postfix notation
@@ -82,6 +83,7 @@ namespace Kse.Algorithms.Samples
                     {
                         output.Add(top);
                     }
+
                     stack.Push(token);
                 }
                 else if (token == "*" || token == "/")
@@ -90,6 +92,7 @@ namespace Kse.Algorithms.Samples
                     {
                         output.Add(top);
                     }
+
                     stack.Push(token);
                 }
                 else if (token == "(")
@@ -115,6 +118,7 @@ namespace Kse.Algorithms.Samples
                 {
                     throw new Exception("Mismatched parentheses");
                 }
+
                 output.Add(top);
             }
 
@@ -147,4 +151,10 @@ namespace Kse.Algorithms.Samples
                 else if (token == "/")
                 {
                     var a = int.Parse(stack.Pull());
-                    var b =
+                    var b = int.Parse(stack.Pull());
+                    stack.Push((a / b).ToString());
+                }
+            }
+        }
+    }
+}
