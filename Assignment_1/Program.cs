@@ -155,6 +155,9 @@ namespace Kse.Algorithms.Samples
                     stack.Push((a / b).ToString());
                 }
             }
+            Console.WriteLine(stack.Pull());
+
         }
     }
 }
+
